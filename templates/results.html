@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Scan Results</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light p-4">
+
+  <div class="container">
+    <h2 class="mb-4">Scan Results</h2>
+    <a href="{{ url_for('index') }}" class="btn btn-secondary mb-3">&larr; Back</a>
+
+    {% for key, value in results.items() %}
+      {% if value.stats is defined and value.results is defined %}
+        <!-- VirusTotal Scan Result Block -->
+        <div class="card shadow-sm mb-4">
+          <div class="card-body">
+            <h5 class="card-title">{{ key.replace('_', ' ').title() }}</h5>
+            {% set stats = value.stats %}
+            <p>
+              ✅ Harmless: {{ stats.harmless }} |
+              ⚠️ Suspicious: {{ stats.suspicious }} |
+              ❌ Malicious: {{ stats.malicious }}
+            </p>
+            <p><strong>Final Verdict:</strong>
+              {% if stats.malicious > 0 %}
+                <span class="text-danger">Malicious</span>
+              {% elif stats.suspicious > 0 %}
+                <span class="text-warning">Suspicious</span>
+              {% else %}
+                <span class="text-success">Clean</span>
+              {% endif %}
+            </p>
+          </div>
+        </div>
+        <h4>Engine Results</h4>
+        <table class="table table-bordered table-striped">
+          <thead>
+            <tr>
+              <th>Engine</th>
+              <th>Category</th>
+              <th>Result</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for engine, result in value.results.items() %}
+            <tr>
+              <td>{{ engine }}</td>
+              <td>{{ result.category }}</td>
+              <td>{{ result.result if result.result else 'Clean' }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% else %}
+        <!-- Fallback for other results -->
+        <div class="card mb-3">
+          <div class="card-header">
+            {{ key.replace('_', ' ').title() }}
+          </div>
+          <div class="card-body">
+            <pre>{{ value | tojson(indent=2) }}</pre>
+          </div>
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+
+</body>
+</html>

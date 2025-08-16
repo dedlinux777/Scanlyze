@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Scanlyze</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <div class="container">
+        <h1>Scanlyze</h1>
+        <p>Welcome to Scanlyze, your one-stop solution for scanning for malicious files, URLs, and gathering information about domains.</p>
+        <hr>
+        <h2>Scan Options</h2>
+        <form action="{{ url_for('scan_file') }}" method="post" enctype="multipart/form-data">
+            <label for="file">Upload File for VirusTotal Scan:</label>
+            <input type="file" name="file" required>
+            <button type="submit">Scan File</button>
+        </form>
+
+        <form action="{{ url_for('scan_url') }}" method="post">
+            <label for="url_to_scan">Enter URL for VirusTotal Scan:</label>
+            <input type="text" name="url_to_scan" placeholder="https://example.com" required>
+            <button type="submit">Scan URL</button>
+        </form>
+        <hr>
+        <h2>Gather Information about a Domain</h2>
+        
+        <form action="{{ url_for('gather') }}" method="post">
+            <label>Domain (for WHOIS, DNS, GeoIP):</label>
+            <input type="text" name="domain" placeholder="example.com"><br>
+
+            <button type="submit">Gather Info</button>
+        </form>
+        <hr>
+    </div>
+</body>
+
+</html>
